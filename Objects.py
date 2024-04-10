@@ -21,3 +21,8 @@ class Preference:
         self.Game = game
         Preference.preferences.append(self)
         self.Player.individualprefs.append(self)
+
+class Round:
+    def __init__(self, nr):
+        self.round_number = nr
+        self.matches = []
