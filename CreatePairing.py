@@ -16,6 +16,8 @@ def CreatePairingNumbers():
 
 def AssignPairingNumbers():
     logging.info("Assigning Pairing Numbers")
+
+    random.seed(0)
     for player in players:
         pairing_number = random.choice(cup)
         player.pairingnumber = pairing_number
@@ -26,5 +28,4 @@ def CreatePairingDict():
     for p in players:
         Player.pairingnr_to_name[p.pairingnumber]= p.name
     Player.pairingnr_to_name = dict(sorted(Player.pairingnr_to_name.items()))
-
 
