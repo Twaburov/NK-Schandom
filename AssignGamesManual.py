@@ -1,28 +1,28 @@
-from Objects import *
+from Objects import Round, Game, GetPlayerByPairingNumber, GetCombinedPreference, GetPlayerWeightForGame
 
-#This method can be used to create a manual pairing (in case the optimization doesn't work)
-def AssignGamesManual():
-    weighttotal = 0
-    weightlow = 1000
-    weightstotal = 0
-    weightslow = 1000
-    for r in Round.rounds:       
-        for m in r.matches:
-            p1 = GetPlayerByPairingNumber(m.p1nr)
-            p2 = GetPlayerByPairingNumber(m.p2nr)
-            m.prefs = {}
-            if p1.name == "BYE" or p2.name == "BYE":
+# This method can be used to create a manual pairing (in case the optimization doesn't work)
+
+
+def assign_games_manually():
+    for round in Round.rounds:
+        for match in round.matches:
+            p1 = GetPlayerByPairingNumber(match.p1nr)
+            p2 = GetPlayerByPairingNumber(match.p2nr)
+            match.prefs = {}
+            if "BYE" in (p1.name, p2.name):
                 continue
 
-            for g in Game.games:
-                #If the game is already played by either player or by another match in the same round, it won't be an option for the match
-                if g in r.playedgames or g in p1.playedgames or g in p2.playedgames:
+            # If the game is already played by either player or by another match in the same round, it won't be an
+            # option for the match
+            for game in Game.games:
+                if game in round.playedgames or game in p1.playedgames or game in p2.playedgames:
                     continue
-                m.prefs[g]= GetCombinedPreference(GetPlayerWeightForGame(p1,g), GetPlayerWeightForGame(p2,g))
+                match.prefs[game] = GetCombinedPreference(GetPlayerWeightForGame(p1, game),
+                                                          GetPlayerWeightForGame(p2, game))
 
-            selected_game = max(m.prefs, key=m.prefs.get) #Just pick the game with the highest combined pref for thsi round
-            m.Game = selected_game
-            r.playedgames.append(selected_game)
+            # Just pick the game with the highest combined pref for this round
+            selected_game = max(match.prefs, key=match.prefs.get)
+            match.Game = selected_game
+            round.playedgames.append(selected_game)
             p1.playedgames.append(selected_game)
             p2.playedgames.append(selected_game)
-    
