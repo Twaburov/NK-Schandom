@@ -11,6 +11,7 @@ logging.basicConfig(filename="logs.log",  filemode="w", level=logging.INFO, form
 
 if __name__ == '__main__':
     # Import all data (players, games, prefs, etc.) from the input Excel file
+    # TODO rename to lowercase functions
     ImportAll('SchandomInput.xlsx')
 
     # Who plays who and in which round
