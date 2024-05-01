@@ -1,35 +1,36 @@
 class Player:
     players = []
-    pairingnr_to_name = {}
+    player_dict = {}
     pairingnumber = 0
 
     def __init__(self, new_name, rating):
         self.name = new_name
         self.rating = rating
         self.playerprefs = []
-        Player.players.append(self)
         self.playedgames = []
+        Player.player_dict[new_name] = self
+        Player.players.append(self)
+        
+
+def get_player_by_pairing_number(pnr):
+    for player in Player.players:
+        if player == Player.player_dict[pnr]:
+            return player
 
 
-def GetPlayerByPairingNumber(pnr):
-    for p in Player.players:
-        if p.name == Player.pairingnr_to_name[pnr]:
-            return p
+def get_player_by_name(pname):
+    for player in Player.players:
+        if player == Player.player_dict[pname]:
+            return player
 
 
-def GetPlayerByName(pname):
-    for p in Player.players:
-        if p.name == pname:
-            return p
-
-
-def GetPlayerWeightForGame(player, game):
+def get_player_weight_for_game(player, game):
     for pref in player.playerprefs:
         if pref.Game == game:
             return pref.weight
 
 
-def GetAllPlayers(includeBye=True):
+def get_all_players(includeBye=True):
     all_players = Player.players.copy()
     if not includeBye:
         for p in all_players:
@@ -45,21 +46,21 @@ class Match:
         self.Game = None
 
 
-def GetAllMatches(includeBye=True):
+def get_all_matches(includeBye=True):
     matches = []
     for r in Round.rounds:
-        round_matches = GetMatches(r, includeBye)
+        round_matches = get_matches(r, includeBye)
         for rm in round_matches:
             matches.append(rm)
     return matches
 
 
-def GetPlayer1(match):
-    return GetPlayerByPairingNumber(match.p1nr)
+def get_player1(match):
+    return get_player_by_pairing_number(match.p1nr)
 
 
-def GetPlayer2(match):
-    return GetPlayerByPairingNumber(match.p2nr)
+def get_player2(match):
+    return get_player_by_pairing_number(match.p2nr)
 
 
 class Game:
@@ -71,7 +72,7 @@ class Game:
         Game.games.append(self)
 
 
-def GetGameByName(gname):
+def get_game_by_name(gname):
     for g in Game.games:
         if g.name == gname:
             return g
@@ -89,7 +90,7 @@ class Preference:
         self.Player.playerprefs.append(self)
 
 
-def GetCombinedPreference(nr1, nr2):
+def get_combined_preference(nr1, nr2):
     return nr1 * nr2
 
 
@@ -103,10 +104,10 @@ class Round:
         self.playedgames = []
 
 
-def GetMatches(round, includeBye):
+def get_matches(round, includeBye):
     matches = round.matches.copy()
     if not includeBye:
         for m in matches:
-            if GetPlayer1(m).name == "BYE" or GetPlayer2(m).name == "BYE":
+            if get_player1(m).name == "BYE" or get_player2(m).name == "BYE":
                 matches.remove(m)
     return matches

@@ -2,35 +2,24 @@ from Objects import *
 import logging
 import random
 
-cup = []
 players = Player.players
 
+def make_pairing():
+    assign_pairing_numbers()
+    create_pairing_dict()
+    
 
-def MakePairing():
-    CreatePairingNumbers()
-    AssignPairingNumbers()
-    CreatePairingDict()
-
-
-def CreatePairingNumbers():
-    for i in range(len(players)):
-        cup.append(i + 1)
-
-
-def AssignPairingNumbers():
-    logging.info("Assigning Pairing Numbers")
-
+def assign_pairing_numbers():
+    num_players = len(players)
     random.seed(0)
+    pairing_numbers = random.sample(range(1, num_players+1), num_players)
+    i = 0
     for player in players:
-        pairing_number = random.choice(cup)
-        player.pairingnumber = pairing_number
+        player.pairingnumber = pairing_numbers[i]
         logging.info("Assigning pairing number " + str(player.pairingnumber) + " to player " + player.name)
-        cup.remove(pairing_number)
+        i += 1
 
 
-
-
-def CreatePairingDict():
-    for p in players:
-        Player.pairingnr_to_name[p.pairingnumber] = p.name
-    Player.pairingnr_to_name = dict(sorted(Player.pairingnr_to_name.items()))
+def create_pairing_dict(): 
+    for player in players:
+        Player.player_dict[player.pairingnumber] = player
