@@ -7,18 +7,20 @@ class Player:
         self.name = new_name
         self.rating = rating
         self.playerprefs = []
-        self.playedgames = []
+        self.playedgames = [] # TODO kan je hier niet beter een set voor gebruiken, omdat dit uniek moet zijn?
         Player.player_dict[new_name] = self
         Player.players.append(self)
         
 
 def get_player_by_pairing_number(pnr):
+    # TODO ipv een for loop kan je niet gewoon Player.player_dict[pnr] doen?
     for player in Player.players:
         if player == Player.player_dict[pnr]:
             return player
 
 
 def get_player_by_name(pname):
+    # TODO ipv een for loop kan je niet gewoon Player.player_dict[pname] doen? Bijv Player.player_dict['TWB']
     for player in Player.players:
         if player == Player.player_dict[pname]:
             return player
