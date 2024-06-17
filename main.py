@@ -14,7 +14,10 @@ if __name__ == '__main__':
     # TODO rename to lowercase functions
     import_all('SchandomInput.xlsx')
 
-     #Who plays who and in which round
+    # TODO in principe sla je nu alles in global Objects op.
+    #  Het is eigenlijk netter om gewoon de resultaten terug te geven en mee te geven met de volgende methode
+
+    # Who plays who and in which round
     make_pairing()
 
     # Determine which games are played in each match
