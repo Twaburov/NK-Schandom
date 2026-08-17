@@ -18,9 +18,11 @@ def assign_games_by_optimization():
     model.x = Var(all_matches, all_games, domain=Binary)
 
     # Objective Function
-    model.obj = Objective(expr=sum(model.x[m, g] * get_combined_preference(get_player_weight_for_game(get_player1(m), g),
-                                                                         get_player_weight_for_game(get_player2(m), g))
-                                   for m in all_matches for g in all_games), sense=maximize)
+    model.obj = Objective(expr=sum(
+    model.x[m, g] * get_combined_preference(
+        get_player_weight_for_game(get_player1(m), g, get_player2(m)),
+        get_player_weight_for_game(get_player2(m), g, get_player1(m)))
+    for m in all_matches for g in all_games), sense=maximize)
 
     # Constraints
     # For each match you have to select exactly one game.
@@ -42,7 +44,7 @@ def assign_games_by_optimization():
                 sum(model.x[m, game] for m in all_matches if (get_player1(m) == player or get_player2(m) == player)) <= 1.0)
 
     # solve
-    results = SolverFactory('glpk').solve(model)
+    results = SolverFactory('appsi_highs').solve(model)
     results.write()
     if results.solver.status:
         pass  # Can print the model:
@@ -51,7 +53,7 @@ def assign_games_by_optimization():
     # Handle Result
     for match in all_matches:
         for game in all_games:
-            if model.x[match, game].value == 1.0:
+            if model.x[match, game].value is not None and model.x[match, game].value > 0.5:
                 match.Game = game  # This sets the solution
                 # Print the output in console, later will be written to Excel in Export.py
                 print(get_player1(match).name, get_player2(match).name, game.name)

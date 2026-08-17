@@ -6,7 +6,6 @@ class Player:
     def __init__(self, new_name, rating):
         self.name = new_name
         self.rating = rating
-        self.playerprefs = []
         self.playedgames = [] # TODO kan je hier niet beter een set voor gebruiken, omdat dit uniek moet zijn?
         Player.player_dict[new_name] = self
         Player.players.append(self)
@@ -26,10 +25,13 @@ def get_player_by_name(pname):
             return player
 
 
-def get_player_weight_for_game(player, game):
-    for pref in player.playerprefs:
-        if pref.Game == game:
-            return pref.weight
+def get_player_weight_for_game(player, game, opponent):
+    weight = Preference.weight_dict.get((player, game, opponent))
+    if weight is None:
+        raise ValueError(
+            f"Geen gewicht gevonden voor speler {player.name}, spel {game.name}, "
+            f"tegenstander {opponent.name}. Check het tabblad Prefs{player.name}.")
+    return weight
 
 
 def get_all_players(includeBye=True):
@@ -70,7 +72,6 @@ class Game:
 
     def __init__(self, new_name):
         self.name = new_name
-        self.gameprefs = []
         Game.games.append(self)
 
 
@@ -82,19 +83,18 @@ def get_game_by_name(gname):
 
 class Preference:
     preferences = []
+    weight_dict = {}   # (player, game, opponent) -> weight
 
-    def __init__(self, weight, player, game):
+    def __init__(self, weight, player, game, opponent):
         self.weight = weight
         self.Player = player
         self.Game = game
+        self.Opponent = opponent
         Preference.preferences.append(self)
-        self.Game.gameprefs.append(self)
-        self.Player.playerprefs.append(self)
-
+        Preference.weight_dict[(player, game, opponent)] = weight
 
 def get_combined_preference(nr1, nr2):
-    return nr1 * nr2
-
+    return min(nr1, nr2)
 
 class Round:
     rounds = []

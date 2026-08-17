@@ -17,8 +17,8 @@ def assign_games_manually():
             for game in Game.games:
                 if game in round.playedgames or game in p1.playedgames or game in p2.playedgames:
                     continue
-                match.prefs[game] = get_combined_preference(get_player_weight_for_game(p1, game),
-                                                          get_player_weight_for_game(p2, game))
+                match.prefs[game] = get_combined_preference(get_player_weight_for_game(p1, game, p2),
+                                            get_player_weight_for_game(p2, game, p1))
 
             # Just pick the game with the highest combined pref for this round
             selected_game = max(match.prefs, key=match.prefs.get)

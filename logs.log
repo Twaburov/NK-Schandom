@@ -1,12 +1,70 @@
 Assigning pairing number 7 to player TWB
-Assigning pairing number 12 to player JAS
-Assigning pairing number 1 to player WOS
-Assigning pairing number 5 to player ROS
-Assigning pairing number 8 to player CHK
-Assigning pairing number 4 to player JAB
-Assigning pairing number 3 to player LOK
-Assigning pairing number 11 to player THM
+Assigning pairing number 8 to player JAS
+Assigning pairing number 4 to player WOS
+Assigning pairing number 1 to player ROS
+Assigning pairing number 3 to player MIS
 Assigning pairing number 6 to player BRB
-Assigning pairing number 9 to player MIS
-Assigning pairing number 10 to player NAK
-Assigning pairing number 2 to player BYE
+Assigning pairing number 2 to player LOK
+Assigning pairing number 5 to player BYE
+Running HiGHS 1.15.1 (git hash: 04024d7): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+MIP has 371 rows; 525 cols; 2100 nonzeros; 525 integer variables (525 binary)
+Coefficient ranges:
+  Matrix  [1e+00, 1e+00]
+  Cost    [1e+00, 3e+01]
+  Bound   [1e+00, 1e+00]
+  RHS     [1e+00, 1e+00]
+Presolving model
+371 rows, 525 cols, 2100 nonzeros 0s
+371 rows, 525 cols, 2100 nonzeros 0s
+Presolve reductions: rows 371(-0); columns 525(-0); nonzeros 2100(-0) - Not reduced
+Objective function is integral with scale 1
+
+Solving MIP model with:
+   371 rows
+   525 cols (525 binary, 0 integer, 0 implied int., 0 continuous, 0 domain fixed)
+   2100 nonzeros
+   Thread count 10 (of 20 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+ J       0       0         0   0.00%   inf             204                Large        0      0      0         0     0.0s
+ R       0       0         0   0.00%   469.2           397               18.19%        0      0      0        55     0.0s
+ C       0       0         0   0.00%   466             435                7.13%      152      8      0        72     0.0s
+ L       0       0         0   0.00%   466             466                0.00%      152      8      0        72     0.1s
+         1       0         1 100.00%   466             466                0.00%      152      8      0        87     0.1s
+
+Solving report
+  Status            Optimal
+  Primal bound      466
+  Dual bound        466
+  Gap               0% (tolerance: 0.01%)
+  P-D integral      0.013779138279
+  Solution status   feasible
+                    466 (objective)
+                    0 (bound viol.)
+                    0 (int. viol.)
+                    0 (row viol.)
+  Timing            0.05
+                    0.01 (Presolve)
+                        MIP    time [calls] = 0.01 [1]
+                        subMIP time [calls] = 0.01 [1]
+                    0.04 (Solve)
+                        MIP    time [calls] = 0.02 [1]
+                        subMIP time [calls] = 0.02 [1]
+                    0.00 (Postsolve)
+                        MIP    time [calls] = 0.00 [1]
+                        subMIP time [calls] = 0.00 [1]
+  Max sub-MIP depth 2
+  Nodes             1
+  Repair LPs        0
+  LP iterations     87
+                    0 (strong br.)
+                    17 (separation)
+                    15 (heuristics)

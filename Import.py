@@ -9,7 +9,7 @@ def import_all(filename):
 
     import_players(wb['Players'])
     import_games(wb['Games'])
-    import_preferences(wb['Prefs'])
+    import_preferences(wb)
     # Import the Berger tabel to initiate a Round Robin pairing.
     import_berger(wb["Berger" + str(len(Player.players))])
 
@@ -27,12 +27,31 @@ def import_games(ws_games):
 
 
 # Imports the Prefs table
-def import_preferences(ws_preferences):
-    for i in range(2, ws_preferences.max_column + 1):
-        for j in range(2, ws_preferences.max_row + 1):
-            Preference(ws_preferences.cell(row=j, column=i).value,
-                       get_player_by_name(ws_preferences.cell(row=1, column=i).value),
-                       get_game_by_name(ws_preferences.cell(row=j, column=1).value))
+def import_preferences(wb):
+    for player in Player.players:
+        if player.name == "BYE":
+            continue
+        sheet_name = "Prefs" + player.name
+        if sheet_name not in wb.sheetnames:
+            raise ValueError(f"Ontbrekend voorkeuren-tabblad: {sheet_name}")
+        ws = wb[sheet_name]
+
+        # kolommen -> tegenstander, gelezen uit de headerrij (op naam, niet op positie)
+        opponents = {}
+        for col in range(2, ws.max_column + 1):
+            opp_name = ws.cell(row=1, column=col).value
+            if opp_name is not None:
+                opponents[col] = get_player_by_name(opp_name)
+
+        # per spelrij een gewicht per tegenstander-kolom
+        for row in range(2, ws.max_row + 1):
+            game_name = ws.cell(row=row, column=1).value
+            if game_name is None:
+                continue
+            game = get_game_by_name(game_name)
+            for col, opponent in opponents.items():
+                weight = ws.cell(row=row, column=col).value
+                Preference(weight, player, game, opponent)
 
 
 def import_berger(ws_berger):
