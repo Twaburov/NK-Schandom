@@ -113,3 +113,27 @@ def get_matches(round, includeBye):
             if get_player1(m).name == "BYE" or get_player2(m).name == "BYE":
                 matches.remove(m)
     return matches
+
+class Restriction:
+    restrictions = {}   # group_id -> Restriction
+
+    def __init__(self, group_id, name, capacity):
+        self.id = group_id
+        self.name = name
+        self.capacity = capacity
+        self.consume = {}          # game -> aantal exemplaren dat dit spel gebruikt
+        Restriction.restrictions[group_id] = self
+
+    def add_game(self, game):
+        self.consume[game] = self.consume.get(game, 0) + 1
+
+
+def get_restriction(group_id, name, capacity):
+    r = Restriction.restrictions.get(group_id)
+    if r is None:
+        return Restriction(group_id, name, capacity)
+    if r.capacity != capacity:
+        raise ValueError(
+            f"Restrictie-groep {group_id} ({name}) heeft wisselende Max "
+            f"({r.capacity} vs {capacity}). Houd Max gelijk binnen een groep.")
+    return r

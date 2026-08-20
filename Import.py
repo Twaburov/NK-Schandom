@@ -10,6 +10,7 @@ def import_all(filename):
     import_players(wb['Players'])
     import_games(wb['Games'])
     import_preferences(wb)
+    import_restrictions(wb['Restrictions'])
     # Import the Berger tabel to initiate a Round Robin pairing.
     import_berger(wb["Berger" + str(len(Player.players))])
 
@@ -53,7 +54,22 @@ def import_preferences(wb):
                 weight = ws.cell(row=row, column=col).value
                 Preference(weight, player, game, opponent)
 
-
+def import_restrictions(ws_restrictions):
+    for row in range(2, ws_restrictions.max_row + 1):
+        group_id = ws_restrictions.cell(row=row, column=1).value
+        name     = ws_restrictions.cell(row=row, column=2).value
+        game_nm  = ws_restrictions.cell(row=row, column=3).value
+        capacity = ws_restrictions.cell(row=row, column=4).value
+        if group_id is None or game_nm is None:
+            continue
+        game = get_game_by_name(game_nm)
+        if game is None:
+            raise ValueError(
+                f"Restrictie verwijst naar onbekend spel '{game_nm}'. "
+                f"Naam moet exact matchen met het tabblad Games.")
+        restriction = get_restriction(group_id, name, capacity)
+        restriction.add_game(game)
+        
 def import_berger(ws_berger):
     for i in range(1, nr_of_players):
         round_i = Round(i)

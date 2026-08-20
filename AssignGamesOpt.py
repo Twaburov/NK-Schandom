@@ -1,5 +1,5 @@
 from Objects import get_all_matches, Game, get_combined_preference, get_player_weight_for_game, get_player1, get_all_players, \
-    Round, get_matches, get_player2
+    Round, get_matches, get_player2, Restriction
 from pyomo.environ import Objective, Var, ConstraintList, Binary
 from pyomo.core import maximize, ConcreteModel
 from pyomo.opt import SolverFactory
@@ -43,6 +43,17 @@ def assign_games_by_optimization():
             model.game_once_per_player.add(
                 sum(model.x[m, game] for m in all_matches if (get_player1(m) == player or get_player2(m) == player)) <= 1.0)
 
+    # Gedeelde-middelen restricties: per ronde mag het totale verbruik van een
+    # middel-groep de capaciteit niet overschrijden (bijv. maar 1 go-bord).
+    model.resource_capacity = ConstraintList()
+    for round in all_rounds:
+        round_matches = get_matches(round, False)
+        for restriction in Restriction.restrictions.values():
+            model.resource_capacity.add(
+                sum(units * model.x[m, g]
+                    for g, units in restriction.consume.items()
+                    for m in round_matches) <= restriction.capacity)
+            
     # solve
     results = SolverFactory('appsi_highs').solve(model)
     results.write()
